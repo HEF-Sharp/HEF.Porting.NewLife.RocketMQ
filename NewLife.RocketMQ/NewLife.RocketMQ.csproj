@@ -4,11 +4,11 @@
     <AssemblyName>NewLife.RocketMQ</AssemblyName>
     <RootNamespace>NewLife.RocketMQ</RootNamespace>
     <AssemblyTitle>RocketMQ客户端</AssemblyTitle>
-    <Description>纯托管轻量级RocketMQ客户端，支持发布消息、消费消息、负载均衡等核心功能！</Description>
+    <Description>Porting from NewLife.RocketMQ, consumer add support topic message tag filter</Description>
     <Company>新生命开发团队</Company>
     <Copyright>©2002-2021 NewLife</Copyright>
-    <Version>1.5.2021.0410</Version>
-    <FileVersion>1.5.2021.0410</FileVersion>
+    <Version>1.5.2021.0423</Version>
+    <FileVersion>1.5.2021.0423</FileVersion>
     <AssemblyVersion>1.5.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <OutputPath>..\Bin</OutputPath>
@@ -17,20 +17,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>$(AssemblyName)</PackageId>
+    <PackageId>HEF.Porting.$(AssemblyName)</PackageId>
     <Authors>$(Company)</Authors>
-    <ProjectUrl>https://github.com/NewLifeX</ProjectUrl>
-    <PackageIcon>leaf.png</PackageIcon>
-    <RepositoryUrl>https://github.com/NewLifeX/NewLife.RocketMQ</RepositoryUrl>
+    <ProjectUrl>https://github.com/HEF-Sharp/HEF.Porting.NewLife.RocketMQ</ProjectUrl>
+    <RepositoryUrl>https://github.com/HEF-Sharp/HEF.Porting.NewLife.RocketMQ</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>新生命团队;X组件;NewLife;$(AssemblyName)</PackageTags>
-    <PackageReleaseNotes>生产者公开负载均衡接口，同时支持重载选择队列；消费者支持解压缩超过4k的大消息</PackageReleaseNotes>
+    <PackageReleaseNotes>consumer add support topic message tag filter</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
@@ -48,19 +43,11 @@
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
     <DefineConstants>$(DefineConstants);__WIN__</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>  
 
   <ItemGroup>
     <Compile Remove="Protocol\SendStatus.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\Doc\leaf.png" Link="leaf.png" PackagePath="\" />
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <PackageReference Include="NewLife.Core" Version="8.10.2021.404" />
