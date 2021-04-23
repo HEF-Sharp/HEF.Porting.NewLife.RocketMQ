@@ -18,9 +18,20 @@ namespace NewLife.RocketMQ
     /// <summary>消费者</summary>
     public class Consumer : MqBase
     {
+        internal const string TagSeparator = "||";
+
         #region 属性
         /// <summary>数据</summary>
-        public IList<ConsumerData> Data { get; set; }
+        public IList<ConsumerData> Data { get; private set; }
+
+        /// <summary>消费类型</summary>
+        public String ConsumeType { get; private set; } = "CONSUME_ACTIVELY";
+
+        /// <summary>表达式类型</summary>
+        public String ExpressionType { get; private set; } = "TAG";
+
+        /// <summary>订阅表达式</summary>
+        public String Subscription { get; private set; } = "*";
 
         /// <summary>消费间隔。默认15_000ms</summary>
         public Int32 ConsumerInterval { get; set; } = 15_000;
@@ -62,30 +73,71 @@ namespace NewLife.RocketMQ
         #endregion
 
         #region 方法
+        private IList<ConsumerData> BuildConsumeDatas()
+        {
+            var subscriptData = new SubscriptionData
+            {
+                Topic = Topic,
+                ExpressionType = ExpressionType,
+                SubString = Subscription
+            };
+
+            if (ExpressionType == "TAG")
+                subscriptData.TagsSet = Subscription.Split(TagSeparator);
+
+            var consumeData = new ConsumerData
+            {
+                GroupName = Group,
+                ConsumeType = ConsumeType,
+                SubscriptionDataSet = new[] { subscriptData }
+            };
+
+            return new[] { consumeData };
+        }
+
+        /// <summary>
+        /// 订阅topic
+        /// </summary>        
+        public void Subscribe(string topic, params string[] tags)
+        {
+            if (topic.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(topic));
+
+            Topic = topic;
+
+            if (tags != null && tags.Any())
+            {
+                Subscription = string.Join(TagSeparator, tags);
+            }
+        }
+
+        /// <summary>
+        /// 被动推送消息
+        /// </summary>
+        public Consumer Passively()
+        {
+            ConsumeType = "CONSUME_PASSIVELY";
+
+            return this;
+        }
+
+        /// <summary>
+        /// 主动拉取消息
+        /// </summary>
+        public Consumer Actively()
+        {
+            ConsumeType = "CONSUME_ACTIVELY";
+
+            return this;
+        }
+
         /// <summary>启动</summary>
         /// <returns></returns>
         public override Boolean Start()
         {
             if (Active) return true;
 
-            var list = Data;
-            if (list == null)
-            {
-                // 建立消费者数据，用于心跳
-                var sd = new SubscriptionData
-                {
-                    Topic = Topic,
-                };
-                var cd = new ConsumerData
-                {
-                    GroupName = Group,
-                    SubscriptionDataSet = new[] { sd },
-                };
-
-                list = new List<ConsumerData> { cd };
-
-                Data = list;
-            }
+            Data = BuildConsumeDatas();  //建立消费者数据
 
             if (!base.Start()) return false;
 
@@ -113,6 +165,8 @@ namespace NewLife.RocketMQ
                 {
                     ConsumerGroup = Group,
                     Topic = Topic,
+                    ExpressionType = ExpressionType,
+                    Subscription = Subscription,
                     QueueId = mq.QueueId,
                     QueueOffset = offset,
                     MaxMsgNums = maxNums,

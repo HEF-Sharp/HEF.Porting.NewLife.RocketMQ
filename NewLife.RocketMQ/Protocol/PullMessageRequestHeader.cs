@@ -15,8 +15,8 @@ namespace NewLife.RocketMQ.Protocol
         /// <summary>主题</summary>
         public String Topic { get; set; }
 
-        ///// <summary>表达式类型</summary>
-        //public String ExpressionType { get; set; } = "TAG";
+        /// <summary>表达式类型</summary>
+        public String ExpressionType { get; set; } = "TAG";
 
         /// <summary>订阅表达式</summary>
         public String Subscription { get; set; } = "*";

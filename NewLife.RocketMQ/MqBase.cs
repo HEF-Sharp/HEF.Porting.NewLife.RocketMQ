@@ -225,7 +225,7 @@ namespace NewLife.RocketMQ.Client
                 defaultTopic = Topic,
                 readQueueNums = queueNum,
                 writeQueueNums = queueNum,
-                perm = 7,
+                perm = 6,
                 topicFilterType = "SINGLE_TAG",
                 topicSysFlag,
                 order = false,
