@@ -34,15 +34,15 @@ namespace NewLife.RocketMQ
         /// <summary>
         /// 获取Topic对应Producer
         /// </summary>        
-        public Producer GetTopicProducer(string topic)
+        public Producer GetTopicProducer(string topic, Action<Producer> producerConfigure = null)
         {
             if (topic.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(topic));
 
-            return _topicProducerCache.GetOrAdd(topic, CreateTopicProducer);
+            return _topicProducerCache.GetOrAdd(topic, (key) => CreateTopicProducer(key, producerConfigure));
         }
 
-        private Producer CreateTopicProducer(string topic)
+        private Producer CreateTopicProducer(string topic, Action<Producer> producerConfigure)
         {
             _masterProducer.CreateTopic(topic, _topicQueueNum);
 
@@ -51,6 +51,9 @@ namespace NewLife.RocketMQ
                 Topic = topic,
                 NameServerAddress = _masterProducer.NameServerAddress
             };
+
+            producerConfigure?.Invoke(topicProducer);
+
             topicProducer.Start();
 
             return topicProducer;
