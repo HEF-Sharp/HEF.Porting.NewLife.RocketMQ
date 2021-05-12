@@ -7,8 +7,8 @@
     <Description>Porting from NewLife.RocketMQ, consumer add support topic message tag filter</Description>
     <Company>新生命开发团队</Company>
     <Copyright>©2002-2021 NewLife</Copyright>
-    <Version>1.5.2021.0423</Version>
-    <FileVersion>1.5.2021.0423</FileVersion>
+    <Version>1.5.2021.0512</Version>
+    <FileVersion>1.5.2021.0512</FileVersion>
     <AssemblyVersion>1.5.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <OutputPath>..\Bin</OutputPath>
